@@ -1,0 +1,8 @@
+<APIProxy name="hello-world-cicd">
+  <Description>Simple Hello World Proxy via ci cd</Description>
+  <Basepaths>/hello</Basepaths>
+  <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+  <CreatedAt>0</CreatedAt>
+  <LastModifiedAt>0</LastModifiedAt>
+  <Revision>1</Revision>
+</APIProxy>
