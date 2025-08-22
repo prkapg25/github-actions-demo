@@ -1,16 +1,52 @@
-name: Hello World Workflow
+name: Build and Deploy Apigee API Proxy
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Say Hello
-        run: echo "🎉 Hello, GitHub Actions is working!"
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11'
 
-      - name: check OS Version
-        run : cat /etc/os-release
+    - name: Build with Maven
+      run: mvn clean install
+
+    - name: Deploy to Apigee
+      run: >
+        mvn apigee-enterprise:deploy
+        -Dapigee.org=${{ secrets.APIGEE_ORG }}
+        -Dapigee.env=${{ secrets.APIGEE_ENV }}
+        -Dapigee.username=${{ secrets.APIGEE_USER }}
+        -Dapigee.password=${{ secrets.APIGEE_PASS }}
+        -Dapigee.override=true
+      env:
+        APIGEE_ORG: ${{ secrets.APIGEE_ORG }}
+        APIGEE_ENV: ${{ secrets.APIGEE_ENV }}
+        APIGEE_USER: ${{ secrets.APIGEE_USER }}
+        APIGEE_PASS: ${{ secrets.APIGEE_PASS }}
+
+    # Optional: Deploy revision as current (activate it)
+    - name: Activate latest revision (optional)
+      run: >
+        mvn apigee-enterprise:activate
+        -Dapigee.org=${{ secrets.APIGEE_ORG }}
+        -Dapigee.env=${{ secrets.APIGEE_ENV }}
+        -Dapigee.username=${{ secrets.APIGEE_USER }}
+        -Dapigee.password=${{ secrets.APIGEE_PASS }}
+      env:
+        APIGEE_ORG: ${{ secrets.APIGEE_ORG }}
+        APIGEE_ENV: ${{ secrets.APIGEE_ENV }}
+        APIGEE_USER: ${{ secrets.APIGEE_USER }}
+        APIGEE_PASS: ${{ secrets.APIGEE_PASS }}
