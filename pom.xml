@@ -1,0 +1,44 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.apigee</groupId>
+  <artifactId>my-proxy</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.apigee.edge.config</groupId>
+        <artifactId>apigee-config-maven-plugin</artifactId>
+        <version>4.5.1</version>
+        <executions>
+          <execution>
+            <id>deploy-proxy</id>
+            <phase>install</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <apigee.org>${apigee.org}</apigee.org>
+          <apigee.env>${apigee.env}</apigee.env>
+          <gcp.project>${gcp.project}</gcp.project>
+          <apigee.apiproxy>${project.artifactId}</apigee.apiproxy>
+          <apigee.options>override</apigee.options>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>test</id>
+      <properties>
+        <apigee.org>my-apigee-org</apigee.org>
+        <apigee.env>test</apigee.env>
+        <gcp.project>my-gcp-project-id</gcp.project>
+      </properties>
+    </profile>
+  </profiles>
+</project>
