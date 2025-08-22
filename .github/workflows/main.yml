@@ -11,3 +11,6 @@ jobs:
 
       - name: Say Hello
         run: echo "🎉 Hello, GitHub Actions is working!"
+
+      - name: check OS Version
+        run : cat /etc/os-release
